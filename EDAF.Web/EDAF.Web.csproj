@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6E182875-D7F3-4112-8A48-5BAE00D1A918}</ProjectGuid>
+    <ProjectGuid>{4CCD6612-3F4D-4823-858B-54DCB4DF5D1E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EDAF.Engine</RootNamespace>
-    <AssemblyName>EDAF.Engine</AssemblyName>
+    <RootNamespace>EDAF.Web</RootNamespace>
+    <AssemblyName>EDAF.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -32,6 +32,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -39,15 +41,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Base\IConveyor.cs" />
-    <Compile Include="Base\IConveyorFactory.cs" />
-    <Compile Include="Base\IEngine.cs" />
-    <Compile Include="Base\IEvent.cs" />
-    <Compile Include="Base\IHandle.cs" />
-    <Compile Include="Core\Engine.cs" />
+    <Compile Include="Controller\BaseApiController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\EDAF.Engine\EDAF.Engine.csproj">
+      <Project>{6e182875-d7f3-4112-8a48-5bae00d1a918}</Project>
+      <Name>EDAF.Engine</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

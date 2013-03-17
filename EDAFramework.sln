@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDAF.Engine", "EDAF.Engine\EDAF.Engine.csproj", "{6E182875-D7F3-4112-8A48-5BAE00D1A918}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDAF.Web", "EDAF.Web\EDAF.Web.csproj", "{4CCD6612-3F4D-4823-858B-54DCB4DF5D1E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{6E182875-D7F3-4112-8A48-5BAE00D1A918}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E182875-D7F3-4112-8A48-5BAE00D1A918}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E182875-D7F3-4112-8A48-5BAE00D1A918}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CCD6612-3F4D-4823-858B-54DCB4DF5D1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CCD6612-3F4D-4823-858B-54DCB4DF5D1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CCD6612-3F4D-4823-858B-54DCB4DF5D1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CCD6612-3F4D-4823-858B-54DCB4DF5D1E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

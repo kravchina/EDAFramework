@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using EDAF.Engine.Base;
 
 namespace EDAF.Engine.Core
 {
     public class Engine : IEngine
     {
-        private readonly Dictionary<Type, Type> conveyors;
+        protected readonly Dictionary<Type, Type> conveyors;
 
-        private IConveyorFactory conveyorFactory;
+        protected IConveyorFactory conveyorFactory;
 
         public Engine()
         {
@@ -34,10 +31,7 @@ namespace EDAF.Engine.Core
             if (conveyors.ContainsKey(typeof(T)))
             {
                 var conveyorType = conveyors[typeof(T)];
-
-                if (conveyorType == null)
-                    throw new InvalidCastException();
-
+                
                 var conveyor = conveyorFactory.GetConveyorInstance<T>(conveyorType);
 
                 conveyor.Run(@event);
