@@ -14,6 +14,7 @@ namespace EDAF.Engine.Core
         {
             conveyors = new Dictionary<Type, Type>();
         }
+
         public void Register<T>(IConveyor<T> conveer)
             where T : IEvent
         {
@@ -45,6 +46,11 @@ namespace EDAF.Engine.Core
         public void SetConveyorFactory(IConveyorFactory factory)
         {
             conveyorFactory = factory;
+        }
+
+        public IBindEventTo<T> BindEvent<T>() where T : IEvent
+        {
+            return new BindEventTo<T>(this);
         }
     }
 }

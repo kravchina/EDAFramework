@@ -5,7 +5,7 @@ using EDAF.Web.Base;
 
 namespace EDAF.Web.Controller
 {
-    public abstract class BaseController<TView, TCreate, TUpdate, TDelete, TQuery, TId, TRepository> : ApiController
+    public abstract class BaseApiController<TView, TCreate, TUpdate, TDelete, TQuery, TId, TRepository> : ApiController
         where TView : class
         where TRepository : IRepository<TView, TQuery, TId>
         where TCreate : IEvent
@@ -16,7 +16,7 @@ namespace EDAF.Web.Controller
 
         protected IEngine engine;
 
-        public BaseController(IEngine engine, TRepository repository)
+        public BaseApiController(IEngine engine, TRepository repository)
         {
             this.engine = engine;
             
