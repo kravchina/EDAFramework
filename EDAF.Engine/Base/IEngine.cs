@@ -9,9 +9,5 @@ namespace EDAF.Engine.Base
     public interface IEngine
     {
         void Execute<T>(T @event) where T : IEvent;
-
-        void SetConveyorFactory(IConveyorFactory factory);
     }
-
-    
 }

@@ -6,7 +6,6 @@ namespace EDAF.Engine.Core
 {
     public class StandardEngine : IStandardEngine
     {
-
         protected readonly Dictionary<Type, Type> conveyors;
 
         protected IConveyorFactory conveyorFactory;
