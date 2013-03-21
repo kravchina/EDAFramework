@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace EDAF.Engine.Base
 {
-    public interface IEngine
+    public interface IBindEvent
     {
-        void Execute<T>(T @event) where T : IEvent;
+        void Bind(Type eventType, Type conveyorType);
 
-        void SetConveyorFactory(IConveyorFactory factory);
+        IBindEventTo<T> BindEvent<T>() where T : IEvent;
     }
-
-    
 }

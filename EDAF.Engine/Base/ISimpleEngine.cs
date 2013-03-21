@@ -6,12 +6,7 @@ using System.Threading.Tasks;
 
 namespace EDAF.Engine.Base
 {
-    public interface IEngine
+    public interface ISimpleEngine : IEngine
     {
-        void Execute<T>(T @event) where T : IEvent;
-
-        void SetConveyorFactory(IConveyorFactory factory);
     }
-
-    
 }

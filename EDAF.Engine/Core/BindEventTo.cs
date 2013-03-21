@@ -4,9 +4,9 @@ namespace EDAF.Engine.Core
 {
     public class BindEventTo<T> : IBindEventTo<T> where T : IEvent
     {
-        protected IEngine Engine;
+        protected StandardEngine Engine;
 
-        public BindEventTo(IEngine engine)
+        public BindEventTo(StandardEngine engine)
         {
             this.Engine = engine;
         }
