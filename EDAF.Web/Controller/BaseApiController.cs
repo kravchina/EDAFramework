@@ -1,6 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
 using System.Web.Http;
 using EDAF.Engine.Base;
+using EDAF.Engine.Infrastructure.Exceptions;
 using EDAF.Web.Base;
 
 namespace EDAF.Web.Controller
@@ -15,6 +19,24 @@ namespace EDAF.Web.Controller
         protected TRepository repository;
 
         protected IEngine engine;
+
+        protected virtual HttpResponseMessage Execute(IEvent @event)
+        {
+            try
+            {
+                engine.Execute(@event);
+            }
+            catch (ExecuteException ex)
+            {
+                return Request.CreateErrorResponse(ex.GetHttpStatusCode(), ex);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
+            }
+
+            return new HttpResponseMessage(HttpStatusCode.OK);
+        }
 
         public BaseApiController(IEngine engine, TRepository repository)
         {
@@ -33,19 +55,19 @@ namespace EDAF.Web.Controller
             return repository.Get(id);
         }
 
-        public virtual void Post(TUpdate entity)
+        public virtual HttpResponseMessage Post(TUpdate entity)
         {
-            engine.Execute(entity);
+            return Execute(entity);
         }
 
-        public virtual void Put(TCreate entity)
+        public virtual HttpResponseMessage Put(TCreate entity)
         {
-            engine.Execute(entity);
+            return Execute(entity);
         }
 
-        public virtual void Delete(TDelete entity)
+        public virtual HttpResponseMessage Delete(TDelete entity)
         {
-            engine.Execute(entity);
+            return Execute(entity);
         }
     }
 }
