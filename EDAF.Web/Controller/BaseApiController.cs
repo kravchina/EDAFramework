@@ -4,13 +4,12 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using EDAF.Engine.Base;
-using EDAF.Engine.Infrastructure.Exceptions;
+using EDAF.Engine.Infrastructure.ExecuteExceptions;
 using EDAF.Web.Base;
 
 namespace EDAF.Web.Controller
 {
     public abstract class BaseApiController<TView, TCreate, TUpdate, TDelete, TQuery, TId, TRepository> : ApiController
-        where TView : class
         where TRepository : IRepository<TView, TQuery, TId>
         where TCreate : IEvent
         where TUpdate : IEvent
@@ -38,7 +37,7 @@ namespace EDAF.Web.Controller
             return new HttpResponseMessage(HttpStatusCode.OK);
         }
 
-        public BaseApiController(IEngine engine, TRepository repository)
+        protected BaseApiController(IEngine engine, TRepository repository)
         {
             this.engine = engine;
             

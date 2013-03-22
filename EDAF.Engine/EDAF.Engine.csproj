@@ -43,14 +43,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\IExecuteException.cs" />
+    <Compile Include="Base\IStandardEngine.cs" />
+    <Compile Include="Base\IBindEvent.cs" />
     <Compile Include="Base\IBindEventTo.cs" />
     <Compile Include="Base\IConveyor.cs" />
     <Compile Include="Base\IConveyorFactory.cs" />
     <Compile Include="Base\IEngine.cs" />
     <Compile Include="Base\IEvent.cs" />
     <Compile Include="Base\IHandle.cs" />
+    <Compile Include="Base\ISimpleEngine.cs" />
     <Compile Include="Core\BindEventTo.cs" />
-    <Compile Include="Core\Engine.cs" />
+    <Compile Include="Core\SimpleEngine.cs" />
+    <Compile Include="Core\StandardEngine.cs" />
+    <Compile Include="Infrastructure\ExecuteExceptions\ExecuteAuthorizeException.cs" />
+    <Compile Include="Infrastructure\ExecuteExceptions\ExecuteException.cs" />
+    <Compile Include="Infrastructure\ExecuteExceptions\ExecuteValidateException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

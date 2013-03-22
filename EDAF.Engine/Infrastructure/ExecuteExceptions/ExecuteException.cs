@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using EDAF.Engine.Base;
 
-namespace EDAF.Engine.Infrastructure.Exceptions
+namespace EDAF.Engine.Infrastructure.ExecuteExceptions
 {
     public abstract class ExecuteException : Exception, IExecuteException
     {
