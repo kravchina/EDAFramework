@@ -44,14 +44,19 @@ namespace EDAF.Web.Controller
             this.repository = repository;
         }
 
-        public virtual ICollection<TView> Get([FromUri]TQuery query)
+        public virtual IEnumerable<TView> Get([FromUri]TQuery query)
         {
             return repository.Query(query);
         }
 
         public virtual TView Get(TId id)
         {
-            return repository.Get(id);
+            var entity = repository.Get(id);
+
+            if (entity == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            return entity;
         }
 
         public virtual HttpResponseMessage Post(TUpdate entity)
