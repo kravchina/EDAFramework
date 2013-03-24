@@ -14,7 +14,7 @@ namespace EDAF.Web.Controller
 
         protected ActionResult Execute(IEvent @event)
         {
-            
+            throw new NotImplementedException();
         }
     }
 }

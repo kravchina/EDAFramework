@@ -43,9 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\IExecuteResult.cs" />
     <Compile Include="Base\IRepository.cs" />
     <Compile Include="Controller\BaseApiController.cs" />
     <Compile Include="Controller\BaseController.cs" />
+    <Compile Include="Extensions\ExecuteResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
