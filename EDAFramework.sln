@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDAF.Engine", "EDAF.Engine\EDAF.Engine.csproj", "{6E182875-D7F3-4112-8A48-5BAE00D1A918}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EDAF.Web", "EDAF.Web\EDAF.Web.csproj", "{4CCD6612-3F4D-4823-858B-54DCB4DF5D1E}"
