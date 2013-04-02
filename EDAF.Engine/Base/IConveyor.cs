@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace EDAF.Engine.Base
 {
-    public interface IConveyor<T> where T : IEvent
+    public interface IConveyor<T> : ISend<T>, IReceive where T : IEvent
     {
-        void Run(T @event);
     }
 }

@@ -16,11 +16,21 @@ namespace EDAF.Engine.Core
             this.handleFactory = handleFactory;
         }
 
-        public abstract void Run(T @event);
-
-        protected void Handle<TK>(T @event) where TK : IHandle<T>
+        protected void HandleVoid<TK>(T @event) where TK : IHandleVoid<T>
         {
             handleFactory.GetHandlerInstance<T>(typeof(TK)).Handle(@event);
+        }
+
+        protected void Handle<TK, TResult>(T @event) where TK : IHandleResult<T, TResult>
+        {
+            handleFactory.GetHandlerInstance<T,TResult>(typeof(TK)).Handle(@event);
+        }
+
+        public abstract void Send(T @event);
+
+        public virtual K Receive<K>()
+        {
+            throw new Exception("This conveyor not return a value");
         }
     }
 }

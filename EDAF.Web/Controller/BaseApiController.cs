@@ -23,7 +23,7 @@ namespace EDAF.Web.Controller
         {
             try
             {
-                engine.Execute(@event);
+                engine.Send(@event);
             }
             catch (ExecuteException ex)
             {

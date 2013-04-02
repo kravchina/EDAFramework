@@ -10,6 +10,8 @@ namespace EDAF.Engine.Core
 
         protected IConveyorFactory conveyorFactory;
 
+        protected IReceive currentConveyor;
+
         public StandardEngine()
         {
             conveyors = new Dictionary<Type, Type>();
@@ -20,7 +22,7 @@ namespace EDAF.Engine.Core
             conveyors.Add(eventType, conveyorType);
         }
 
-        public void Execute<T>(T @event) where T : IEvent
+        public void Send<T>(T @event) where T : IEvent
         {
             if (conveyors.ContainsKey(typeof(T)))
             {
@@ -28,12 +30,19 @@ namespace EDAF.Engine.Core
 
                 var conveyor = conveyorFactory.GetConveyorInstance<T>(conveyorType);
 
-                conveyor.Run(@event);
+                conveyor.Send(@event);
+
+                currentConveyor = conveyor;
             }
             else
             {
                 throw new KeyNotFoundException();
             }
+        }
+
+        public T Receive<T>()
+        {
+            return currentConveyor.Receive<T>();
         }
 
         public void SetConveyorFactory(IConveyorFactory factory)

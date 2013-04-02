@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace EDAF.Engine.Base
 {
-    public interface IEngine
+    public interface IHandleVoid<T> where T : IEvent
     {
-        void Send<T>(T @event) where T : IEvent;
-        T Receive<T>();
+        void Handle(T @event);
     }
 }

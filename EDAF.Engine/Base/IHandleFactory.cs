@@ -8,6 +8,7 @@ namespace EDAF.Engine.Base
 {
     public interface IHandleFactory
     {
-        IHandle<T> GetHandlerInstance<T>(Type handleType) where T : IEvent;
+        IHandleVoid<T> GetHandlerInstance<T>(Type handleType) where T : IEvent;
+        IHandleResult<T,TResult> GetHandlerInstance<T, TResult>(Type handleType) where T : IEvent;
     }
 }
