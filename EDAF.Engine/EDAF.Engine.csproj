@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\IExecuteException.cs" />
+    <Compile Include="Base\IHandleResult.cs" />
     <Compile Include="Base\IHandleFactory.cs" />
     <Compile Include="Base\IReceive.cs" />
     <Compile Include="Base\IReceiveResult.cs" />
@@ -55,7 +56,7 @@
     <Compile Include="Base\IConveyorFactory.cs" />
     <Compile Include="Base\IEngine.cs" />
     <Compile Include="Base\IEvent.cs" />
-    <Compile Include="Base\IHandle.cs" />
+    <Compile Include="Base\IHandleVoid.cs" />
     <Compile Include="Base\ISimpleEngine.cs" />
     <Compile Include="Core\BindEventTo.cs" />
     <Compile Include="Core\Conveyor.cs" />
