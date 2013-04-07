@@ -10,4 +10,9 @@ namespace EDAF.Engine.Base
     {
         void Run(T @event);
     }
+
+    public interface IConveyor<T, TResponse> : IConveyor<T> where T : IEvent
+    {
+        TResponse GetResponse();
+    }
 }

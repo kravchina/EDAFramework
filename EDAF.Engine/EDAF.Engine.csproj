@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\IExecuteException.cs" />
+    <Compile Include="Base\IExecuteResponse.cs" />
     <Compile Include="Base\IHandleFactory.cs" />
     <Compile Include="Base\IStandardEngine.cs" />
     <Compile Include="Base\IBindEvent.cs" />
@@ -56,6 +57,8 @@
     <Compile Include="Base\ISimpleEngine.cs" />
     <Compile Include="Core\BindEventTo.cs" />
     <Compile Include="Core\Conveyor.cs" />
+    <Compile Include="Core\ExecuteResponse.cs" />
+    <Compile Include="Core\Handler.cs" />
     <Compile Include="Core\SimpleEngine.cs" />
     <Compile Include="Core\StandardEngine.cs" />
     <Compile Include="Infrastructure\ExecuteExceptions\ExecuteAuthorizeException.cs" />

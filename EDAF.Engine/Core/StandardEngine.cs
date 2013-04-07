@@ -20,7 +20,7 @@ namespace EDAF.Engine.Core
             conveyors.Add(eventType, conveyorType);
         }
 
-        public void Execute<T>(T @event) where T : IEvent
+        public IExecuteResponse Execute<T>(T @event) where T : IEvent
         {
             if (conveyors.ContainsKey(typeof(T)))
             {
@@ -29,6 +29,8 @@ namespace EDAF.Engine.Core
                 var conveyor = conveyorFactory.GetConveyorInstance<T>(conveyorType);
 
                 conveyor.Run(@event);
+
+                return new ExecuteResponse<T>(conveyor);
             }
             else
             {

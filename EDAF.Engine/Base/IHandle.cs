@@ -10,4 +10,9 @@ namespace EDAF.Engine.Base
     {
         void Handle(T @event);
     }
+
+    public interface IHandle<T, TResponse> : IHandle<T> where T : IEvent
+    {
+        TResponse GetResponse();
+    }
 }
