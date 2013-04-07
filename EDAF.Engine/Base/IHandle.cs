@@ -9,10 +9,6 @@ namespace EDAF.Engine.Base
     public interface IHandle<T> where T : IEvent
     {
         void Handle(T @event);
-    }
-
-    public interface IHandle<T, TResponse> : IHandle<T> where T : IEvent
-    {
-        TResponse GetResponse();
+        IExecuteResponse GetResponse();
     }
 }

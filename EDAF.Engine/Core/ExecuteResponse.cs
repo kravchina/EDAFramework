@@ -6,25 +6,18 @@ using EDAF.Engine.Base;
 
 namespace EDAF.Engine.Core
 {
-    public sealed class ExecuteResponse<T> : IExecuteResponse where T : IEvent
+    public sealed class ExecuteResponse : IExecuteResponse
     {
-        private IConveyor<T> _conveyor;
+        private object _response;
 
-        public ExecuteResponse(IConveyor<T> conveyor)
+        public ExecuteResponse(object response)
         {
-            _conveyor = conveyor;
+            _response = response;
         }
 
-        public TResult GetResponse<TResult>()
+        public TResponse GetResponse<TResponse>()
         {
-            var conveyor = _conveyor as IConveyor<T, TResult>;
-
-            if (conveyor == null)
-            {
-                throw new Exception("This conveyor can not return respone or invalid requested response type");
-            }
-
-            return conveyor.GetResponse();
+            return (TResponse)_response;
         }
     }
 }

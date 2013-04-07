@@ -30,7 +30,7 @@ namespace EDAF.Engine.Core
 
                 conveyor.Run(@event);
 
-                return new ExecuteResponse<T>(conveyor);
+                return conveyor.GetResponse();
             }
             else
             {
