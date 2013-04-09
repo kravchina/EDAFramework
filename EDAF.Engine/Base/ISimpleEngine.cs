@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EDAF.Engine.Base
 {
-    public interface ISimpleEngine : IEngine
+    public interface ISimpleEngine : IWriteEngine
     {
     }
 }

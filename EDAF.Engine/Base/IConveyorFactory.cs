@@ -8,6 +8,6 @@ namespace EDAF.Engine.Base
 {
     public interface IConveyorFactory
     {
-        IConveyor<T> GetConveyorInstance<T>(Type conveyorType) where T : IEvent;
+        IWriteConveyor<T> GetConveyorInstance<T>(Type conveyorType) where T : IWriteEvent;
     }
 }

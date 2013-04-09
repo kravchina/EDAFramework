@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace EDAF.Engine.Base
 {
-    public interface IConveyor<T> where T : IEvent
+    public interface IWriteHandler<T> where T : IWriteEvent
     {
-        void Run(T @event);
+        void Handle(T @event);
         IExecuteResponse GetResponse();
     }
 }

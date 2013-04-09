@@ -10,6 +10,6 @@ namespace EDAF.Engine.Base
     {
         void Bind(Type eventType, Type conveyorType);
 
-        IBindEventTo<T> BindEvent<T>() where T : IEvent;
+        IBindEventTo<T> BindEvent<T>() where T : IWriteEvent;
     }
 }

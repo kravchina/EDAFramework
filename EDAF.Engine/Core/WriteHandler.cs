@@ -6,7 +6,7 @@ using EDAF.Engine.Base;
 
 namespace EDAF.Engine.Core
 {
-    public abstract class Handler<T> : IHandle<T> where T : IEvent
+    public abstract class WriteHandler<T> : IWriteHandler<T> where T : IWriteEvent
     {
         private object _response;
 

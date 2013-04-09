@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace EDAF.Engine.Base
 {
-    public interface IStandardEngine : IEngine, IBindEvent
+    public interface IWriteEngine
     {
-        void SetConveyorFactory(IConveyorFactory factory);
+        IExecuteResponse Write<T>(T @event) where T : IWriteEvent;
     }
 }

@@ -4,7 +4,7 @@ namespace EDAF.Engine.Core
 {
     public class SimpleEngine : ISimpleEngine
     {
-        public IExecuteResponse Execute<T>(T @event) where T : IEvent
+        public IExecuteResponse Write<T>(T @event) where T : IWriteEvent
         {
             throw new System.NotImplementedException();
         }

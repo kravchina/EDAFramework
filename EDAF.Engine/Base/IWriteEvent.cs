@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace EDAF.Engine.Base
 {
-    public interface IEvent {}
+    public interface IWriteEvent {}
 }

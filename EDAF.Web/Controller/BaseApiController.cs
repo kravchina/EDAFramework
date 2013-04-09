@@ -11,19 +11,19 @@ namespace EDAF.Web.Controller
 {
     public abstract class BaseApiController<TView, TCreate, TUpdate, TDelete, TQuery, TId, TRepository> : ApiController
         where TRepository : IRepository<TView, TQuery, TId>
-        where TCreate : IEvent
-        where TUpdate : IEvent
-        where TDelete : IEvent
+        where TCreate : IWriteEvent
+        where TUpdate : IWriteEvent
+        where TDelete : IWriteEvent
     {
         protected TRepository repository;
 
-        protected IEngine engine;
+        protected IWriteEngine engine;
 
-        protected virtual HttpResponseMessage Execute(IEvent @event)
+        protected virtual HttpResponseMessage Execute(IWriteEvent @event)
         {
             try
             {
-                engine.Execute(@event);
+                engine.Write(@event);
             }
             catch (ExecuteException ex)
             {
@@ -37,7 +37,7 @@ namespace EDAF.Web.Controller
             return new HttpResponseMessage(HttpStatusCode.OK);
         }
 
-        protected BaseApiController(IEngine engine, TRepository repository)
+        protected BaseApiController(IWriteEngine engine, TRepository repository)
         {
             this.engine = engine;
             

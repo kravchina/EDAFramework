@@ -7,13 +7,13 @@ using EDAF.Engine.Base;
 
 namespace EDAF.Engine.Core
 {
-    public abstract class Conveyor<T> : IConveyor<T> where T : IEvent
+    public abstract class WriteConveyor<T> : IWriteConveyor<T> where T : IWriteEvent
     {
         protected IHandleFactory handleFactory;
 
         private IExecuteResponse _response;
 
-        protected Conveyor(IHandleFactory handleFactory)
+        protected WriteConveyor(IHandleFactory handleFactory)
         {
             this.handleFactory = handleFactory;
         }
@@ -25,7 +25,7 @@ namespace EDAF.Engine.Core
             return _response;
         }
 
-        protected void Handle<TK>(T @event) where TK : IHandle<T>
+        protected void Handle<TK>(T @event) where TK : IWriteHandler<T>
         {
             var handler = handleFactory.GetHandlerInstance<T>(typeof(TK));
 

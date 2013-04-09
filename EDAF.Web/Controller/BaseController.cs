@@ -10,9 +10,9 @@ namespace EDAF.Web.Controller
 {
     public class BaseController : System.Web.Mvc.Controller
     {
-        protected IEngine engine;
+        protected IWriteEngine engine;
 
-        protected ActionResult Execute(IEvent @event)
+        protected ActionResult Execute(IWriteEvent @event)
         {
             throw new NotImplementedException();
         }

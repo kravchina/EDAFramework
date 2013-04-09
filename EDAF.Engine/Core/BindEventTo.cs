@@ -2,16 +2,16 @@
 
 namespace EDAF.Engine.Core
 {
-    public class BindEventTo<T> : IBindEventTo<T> where T : IEvent
+    public class BindEventTo<T> : IBindEventTo<T> where T : IWriteEvent
     {
-        protected StandardEngine Engine;
+        protected Engine Engine;
 
-        public BindEventTo(StandardEngine engine)
+        public BindEventTo(Engine engine)
         {
             this.Engine = engine;
         }
 
-        public void ToConveyor<K>() where K : IConveyor<T>
+        public void ToConveyor<K>() where K : IWriteConveyor<T>
         {
             Engine.Bind(typeof(T), typeof(K));
         }

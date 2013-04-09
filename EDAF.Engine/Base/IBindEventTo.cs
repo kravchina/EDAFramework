@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace EDAF.Engine.Base
 {
-    public interface IBindEventTo<T> where T : IEvent
+    public interface IBindEventTo<T> where T : IWriteEvent
     {
-        void ToConveyor<K>() where K : IConveyor<T>;
+        void ToConveyor<K>() where K : IWriteConveyor<T>;
     }
 }
