@@ -17,10 +17,10 @@ namespace EDAF.Engine.Core
             _response = response;
         }
 
-        public IExecuteResponse GetResponse()
+        public IWriteResponse GetResponse()
         {
             if(_response != null)
-                return new ExecuteResponse(_response);
+                return new WriteResponse(_response);
             return null;
         }
     }

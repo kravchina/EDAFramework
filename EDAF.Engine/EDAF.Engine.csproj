@@ -43,26 +43,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Base\IExecuteException.cs" />
-    <Compile Include="Base\IExecuteResponse.cs" />
-    <Compile Include="Base\IHandleFactory.cs" />
-    <Compile Include="Base\IReadEngine.cs" />
-    <Compile Include="Base\IReadEvent.cs" />
-    <Compile Include="Base\IReadHandler.cs" />
+    <Compile Include="Base\Read\IReadEventBinding.cs" />
+    <Compile Include="Base\Write\IWriteEventBinding.cs" />
+    <Compile Include="Base\Read\IReadEngine.cs" />
+    <Compile Include="Base\Read\IReadHandlerPool.cs" />
+    <Compile Include="Base\Write\IWriteEngine.cs" />
+    <Compile Include="Base\Write\IWriteHandlerPool.cs" />
+    <Compile Include="Base\Write\IWriteResponse.cs" />
+    <Compile Include="Base\Read\IReadEvent.cs" />
+    <Compile Include="Base\Read\IReadHandler.cs" />
     <Compile Include="Base\IEngine.cs" />
-    <Compile Include="Base\IBindEvent.cs" />
-    <Compile Include="Base\IBindEventTo.cs" />
-    <Compile Include="Base\IReadHandlerFactory.cs" />
-    <Compile Include="Base\IWriteConveyor.cs" />
-    <Compile Include="Base\IConveyorFactory.cs" />
-    <Compile Include="Base\IWriteEngine.cs" />
-    <Compile Include="Base\IWriteEvent.cs" />
-    <Compile Include="Base\IWriteHandler.cs" />
+    <Compile Include="Base\Write\IWriteEvent.cs" />
+    <Compile Include="Base\Write\IWriteHandler.cs" />
     <Compile Include="Base\ISimpleEngine.cs" />
     <Compile Include="Core\BindEventTo.cs" />
+    <Compile Include="Core\Infrastructure\EventBinding.cs" />
     <Compile Include="Core\ReadHandler.cs" />
     <Compile Include="Core\WriteConveyor.cs" />
-    <Compile Include="Core\ExecuteResponse.cs" />
+    <Compile Include="Core\WriteResponse.cs" />
     <Compile Include="Core\WriteHandler.cs" />
     <Compile Include="Core\SimpleEngine.cs" />
     <Compile Include="Core\Engine.cs" />
@@ -71,7 +69,9 @@
     <Compile Include="Infrastructure\ExecuteExceptions\ExecuteValidateException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Base\Infrastructure\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

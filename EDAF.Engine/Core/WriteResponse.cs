@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EDAF.Engine.Base;
+using EDAF.Engine.Base.Write;
 
 namespace EDAF.Engine.Core
 {
-    public sealed class ExecuteResponse : IExecuteResponse
+    public sealed class WriteResponse : IWriteResponse
     {
         private object _response;
 
-        public ExecuteResponse(object response)
+        public WriteResponse(object response)
         {
             _response = response;
         }

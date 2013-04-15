@@ -1,96 +1,88 @@
 ﻿using System;
 using System.Collections.Generic;
 using EDAF.Engine.Base;
+using EDAF.Engine.Base.Infrastructure;
+using EDAF.Engine.Base.Read;
+using EDAF.Engine.Base.Write;
+using EDAF.Engine.Core.Infrastructure;
 
 namespace EDAF.Engine.Core
 {
     public class Engine : IEngine
     {
-        protected readonly Dictionary<Type, Type> conveyors;
+        protected readonly Dictionary<Type, ICollection<Type>> bindedWriteHandlers;
 
-        protected IConveyorFactory conveyorFactory;
+        protected readonly Dictionary<Type, Type> bindedReadHandlers;
 
-        protected IReadHandlerFactory readHandlerFactory;
+        protected IWriteHandlerPool writeHandlerPool;
+
+        protected IReadHandlerPool readHandlerPool;
 
         public Engine()
         {
-            conveyors = new Dictionary<Type, Type>();
+            bindedWriteHandlers = new Dictionary<Type, ICollection<Type>>();
         }
 
-        public void Bind(Type eventType, Type conveyorType)
+        public IWriteEventBinding<T> BindEvent<T>() where T : IWriteEvent
         {
-            conveyors.Add(eventType, conveyorType);
+            var conveyor = new LinkedList<Type>();
+
+            bindedWriteHandlers.Add(typeof(T), conveyor);
+
+            return new WriteEventBinding<T>(conveyor);
         }
 
-        public IExecuteResponse Write<T>(T @event) where T : IWriteEvent
+        public IReadEventBinding<T, TK> BindEvent<T, TK>() where T : IReadEvent<TK>
         {
-            if (conveyors.ContainsKey(typeof(T)))
+            throw new NotImplementedException();
+        }
+
+        public IWriteResponse Write<T>(T @event) where T : IWriteEvent
+        {
+            var eventType = typeof (T);
+
+            if (bindedWriteHandlers.ContainsKey(eventType))
             {
-                var conveyorType = conveyors[typeof(T)];
+                var conveyor = bindedWriteHandlers[eventType];
 
-                var conveyor = conveyorFactory.GetConveyorInstance<T>(conveyorType);
+                IWriteResponse response = null;
 
-                conveyor.Run(@event);
+                foreach (var handleType in conveyor)
+                {
+                    var handler = writeHandlerPool.GetHandler<T>(handleType);
 
-                return conveyor.GetResponse();
+                    handler.Handle(@event);
+
+                    var handlerResponse = handler.GetResponse();
+
+                    if (handlerResponse != null)
+                        response = handlerResponse;
+                }
+
+                return response;
             }
             else
             {
                 throw new KeyNotFoundException();
             }
-        }
-
-        public void SetConveyorFactory(IConveyorFactory factory)
-        {
-            conveyorFactory = factory;
-        }
-
-        public IBindEventTo<T> BindEvent<T>() where T : IWriteEvent
-        {
-            return new BindEventTo<T>(this);
-        }
-
-        public TResult Read<TResult>(IReadEvent<TResult> @event)
-        {
-            var eventType = @event.GetType();
-
-            if (conveyors.ContainsKey(eventType))
-            {
-                var handlerType = conveyors[eventType];
-
-                var handler = readHandlerFactory.GetHandlerInstance<TResult>(handlerType);
-
-                return handler.Handle(@event);
-
-            }
-            else
-            {
-                throw new KeyNotFoundException();
-            }
-            /*throw new NotImplementedException();*/
         }
 
         public TResult Read<TRequest, TResult>(TRequest @event) where TRequest : IReadEvent<TResult>
         {
+            var requestType = typeof(TRequest);
 
-            if (conveyors.ContainsKey(typeof(TRequest)))
+            if (bindedWriteHandlers.ContainsKey(requestType))
             {
-                var handlerType = conveyors[typeof(TRequest)];
+                var handlerType = bindedReadHandlers[requestType];
 
-                var handler = readHandlerFactory.GetHandlerInstance<TRequest, TResult>(handlerType);
+                var handler = readHandlerPool.GetHandler<TRequest, TResult>(handlerType);
 
                 return handler.Handle(@event);
-
             }
             else
             {
                 throw new KeyNotFoundException();
             }
-        }
-
-        public void SetHandlerFactory(IReadHandlerFactory factory)
-        {
-            readHandlerFactory = factory;
         }
     }
 }

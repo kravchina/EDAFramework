@@ -11,7 +11,7 @@ namespace EDAF.Engine.Core
     {
         protected IHandleFactory handleFactory;
 
-        private IExecuteResponse _response;
+        private IWriteResponse _response;
 
         protected WriteConveyor(IHandleFactory handleFactory)
         {
@@ -20,7 +20,7 @@ namespace EDAF.Engine.Core
 
         public abstract void Run(T @event);
 
-        public IExecuteResponse GetResponse()
+        public IWriteResponse GetResponse()
         {
             return _response;
         }
