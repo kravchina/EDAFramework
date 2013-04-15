@@ -43,34 +43,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Base\Read\IReadEventBinding.cs" />
-    <Compile Include="Base\Write\IWriteEventBinding.cs" />
-    <Compile Include="Base\Read\IReadEngine.cs" />
-    <Compile Include="Base\Read\IReadHandlerPool.cs" />
-    <Compile Include="Base\Write\IWriteEngine.cs" />
-    <Compile Include="Base\Write\IWriteHandlerPool.cs" />
-    <Compile Include="Base\Write\IWriteResponse.cs" />
-    <Compile Include="Base\Read\IReadEvent.cs" />
-    <Compile Include="Base\Read\IReadHandler.cs" />
     <Compile Include="Base\IEngine.cs" />
-    <Compile Include="Base\Write\IWriteEvent.cs" />
-    <Compile Include="Base\Write\IWriteHandler.cs" />
-    <Compile Include="Base\ISimpleEngine.cs" />
-    <Compile Include="Core\BindEventTo.cs" />
-    <Compile Include="Core\Infrastructure\EventBinding.cs" />
-    <Compile Include="Core\ReadHandler.cs" />
-    <Compile Include="Core\WriteConveyor.cs" />
-    <Compile Include="Core\WriteResponse.cs" />
-    <Compile Include="Core\WriteHandler.cs" />
-    <Compile Include="Core\SimpleEngine.cs" />
+    <Compile Include="Base\IEvent.cs" />
+    <Compile Include="Base\IEventBinding.cs" />
+    <Compile Include="Base\IHandle.cs" />
+    <Compile Include="Base\IHandleResponse.cs" />
+    <Compile Include="Base\IHandlerPool.cs" />
+    <Compile Include="Base\IResponse.cs" />
     <Compile Include="Core\Engine.cs" />
-    <Compile Include="Infrastructure\ExecuteExceptions\ExecuteAuthorizeException.cs" />
-    <Compile Include="Infrastructure\ExecuteExceptions\ExecuteException.cs" />
-    <Compile Include="Infrastructure\ExecuteExceptions\ExecuteValidateException.cs" />
+    <Compile Include="Core\EventBinding.cs" />
+    <Compile Include="Core\HandleResponse.cs" />
+    <Compile Include="Core\NullHandleResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Base\Infrastructure\" />
+    <Folder Include="Infrastructure\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

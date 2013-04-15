@@ -1,88 +1,58 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using EDAF.Engine.Base;
-using EDAF.Engine.Base.Infrastructure;
-using EDAF.Engine.Base.Read;
-using EDAF.Engine.Base.Write;
-using EDAF.Engine.Core.Infrastructure;
 
 namespace EDAF.Engine.Core
 {
     public class Engine : IEngine
     {
-        protected readonly Dictionary<Type, ICollection<Type>> bindedWriteHandlers;
+        private readonly IDictionary<Type, ICollection<Tuple<Type, bool>>> bindedHandler;
 
-        protected readonly Dictionary<Type, Type> bindedReadHandlers;
+        private readonly IHandlerPool handlerPool;
 
-        protected IWriteHandlerPool writeHandlerPool;
-
-        protected IReadHandlerPool readHandlerPool;
-
-        public Engine()
+        public Engine(IHandlerPool handlerPool)
         {
-            bindedWriteHandlers = new Dictionary<Type, ICollection<Type>>();
+            this.handlerPool = handlerPool;
+
+            bindedHandler = new Dictionary<Type, ICollection<Tuple<Type, bool>>>();
         }
 
-        public IWriteEventBinding<T> BindEvent<T>() where T : IWriteEvent
+        public IEventBinding<T> BindEvent<T>() where T : IEvent
         {
-            var conveyor = new LinkedList<Type>();
+            var conveyor = new LinkedList<Tuple<Type, bool>>();
 
-            bindedWriteHandlers.Add(typeof(T), conveyor);
+            bindedHandler.Add(typeof(T), conveyor);
 
-            return new WriteEventBinding<T>(conveyor);
-        }
+            return new EventBinding<T>(conveyor);
+        } 
 
-        public IReadEventBinding<T, TK> BindEvent<T, TK>() where T : IReadEvent<TK>
+        public IHandleResponse<T> Handle<T>(T @event) where T : IEvent
         {
-            throw new NotImplementedException();
-        }
+            var handlerType = typeof (T);
 
-        public IWriteResponse Write<T>(T @event) where T : IWriteEvent
-        {
-            var eventType = typeof (T);
-
-            if (bindedWriteHandlers.ContainsKey(eventType))
+            if (bindedHandler.ContainsKey(handlerType))
             {
-                var conveyor = bindedWriteHandlers[eventType];
+                var conveyor = bindedHandler[handlerType];
 
-                IWriteResponse response = null;
+                IHandleResponse<T> handleResponse = new NullHandleResponse<T>();
 
-                foreach (var handleType in conveyor)
+                foreach (var tuple in conveyor)
                 {
-                    var handler = writeHandlerPool.GetHandler<T>(handleType);
+                    var handler = handlerPool.GetHandler<T>(tuple.Item1);
 
                     handler.Handle(@event);
 
-                    var handlerResponse = handler.GetResponse();
-
-                    if (handlerResponse != null)
-                        response = handlerResponse;
+                    if(tuple.Item2)
+                        handleResponse = new HandleResponse<T>(handler);
                 }
 
-                return response;
-            }
-            else
-            {
-                throw new KeyNotFoundException();
-            }
-        }
+                return handleResponse;
 
-        public TResult Read<TRequest, TResult>(TRequest @event) where TRequest : IReadEvent<TResult>
-        {
-            var requestType = typeof(TRequest);
-
-            if (bindedWriteHandlers.ContainsKey(requestType))
-            {
-                var handlerType = bindedReadHandlers[requestType];
-
-                var handler = readHandlerPool.GetHandler<TRequest, TResult>(handlerType);
-
-                return handler.Handle(@event);
             }
-            else
-            {
-                throw new KeyNotFoundException();
-            }
+
+            throw new KeyNotFoundException();
         }
     }
 }
