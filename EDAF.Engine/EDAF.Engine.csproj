@@ -43,18 +43,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Base\Read\IReadEventBinding.cs" />
-    <Compile Include="Base\Write\IWriteEventBinding.cs" />
-    <Compile Include="Base\Read\IReadEngine.cs" />
-    <Compile Include="Base\Read\IReadHandlerPool.cs" />
-    <Compile Include="Base\Write\IWriteEngine.cs" />
-    <Compile Include="Base\Write\IWriteHandlerPool.cs" />
-    <Compile Include="Base\Write\IWriteResponse.cs" />
-    <Compile Include="Base\Read\IReadEvent.cs" />
-    <Compile Include="Base\Read\IReadHandler.cs" />
+    <Compile Include="Base\IEvent.cs" />
+    <Compile Include="Base\IHandle.cs" />
+    <Compile Include="Base\IHandlerPool.cs" />
+    <Compile Include="Base\IResponse.cs" />
+    <Compile Include="Base\IEventBinding.cs" />
     <Compile Include="Base\IEngine.cs" />
-    <Compile Include="Base\Write\IWriteEvent.cs" />
-    <Compile Include="Base\Write\IWriteHandler.cs" />
     <Compile Include="Base\ISimpleEngine.cs" />
     <Compile Include="Core\BindEventTo.cs" />
     <Compile Include="Core\Infrastructure\EventBinding.cs" />
