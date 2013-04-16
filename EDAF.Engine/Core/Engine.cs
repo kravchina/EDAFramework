@@ -18,7 +18,7 @@ namespace EDAF.Engine.Core
 
         public IEventBinding<T> BindEvent<T>() where T : IEvent
         {
-            var conveyor = new LinkedList<Type>();
+            var conveyor = new LinkedList<Tuple<Type, bool>>();
 
             bindedHandlers.Add(typeof(T), conveyor);
 
@@ -35,7 +35,7 @@ namespace EDAF.Engine.Core
                 
                 foreach (var handleType in conveyor)
                 {
-                    var handler = handlerPool.GetHandler<T>(handleType);
+                    var handler = handlerPool.GetHandler<T>(handleType.Item1);
 
                     handler.Handle(@event);
                 }
@@ -46,7 +46,7 @@ namespace EDAF.Engine.Core
             }
         }
 
-        public void Handle<T,TResponse>(T @event) where T : IEvent
+        public TResponse Handle<T, TResponse>(T @event) where T : IEvent
         {
             var eventType = typeof(T);
 
@@ -54,12 +54,21 @@ namespace EDAF.Engine.Core
             {
                 var conveyor = bindedHandlers[eventType];
 
+                TResponse response;
+
                 foreach (var handleType in conveyor)
                 {
-                    var handler = handlerPool.GetHandler<T>(handleType);
+                    var handler = handlerPool.GetHandler<T>(handleType.Item1);
 
                     handler.Handle(@event);
+
+                    if(handleType.Item2)
+                    {
+                        response = ((IResponse<TResponse>)handler).Response();
+                    }
                 }
+
+                return response;
             }
             else
             {
