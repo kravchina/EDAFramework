@@ -5,8 +5,8 @@ using System.Text;
 
 namespace EDAF.Engine.Base
 {
-    public interface IEngine
+    public interface IBindToHandler<out T> where T : IEvent
     {
-        IHandleResponse<T> Handle<T>(T @event) where T : IEvent;
+        IBindToHandler<T> ToHandler<TK>() where TK : IHandle<T>;
     }
 }

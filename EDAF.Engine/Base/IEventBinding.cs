@@ -5,8 +5,10 @@ using System.Text;
 
 namespace EDAF.Engine.Base
 {
-    public interface IEventBinding<out T> where T : IEvent
+    public interface IEventBinding
     {
-        IEventBinding<T> ToHandler<TK>() where TK : IHandle<T>;
+        IBindToHandler<T> BindEvent<T>() where T : IEvent;
+        ICollection<Tuple<Type, bool>> GetHandledConveyor(Type eventType);
+        bool IsBinded(Type eventType);
     }
 }

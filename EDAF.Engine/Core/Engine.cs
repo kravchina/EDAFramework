@@ -8,33 +8,24 @@ namespace EDAF.Engine.Core
 {
     public class Engine : IEngine
     {
-        private readonly IDictionary<Type, ICollection<Tuple<Type, bool>>> bindedHandler;
+        private readonly IEventBinding bindedHandler;
 
         private readonly IHandlerPool handlerPool;
 
-        public Engine(IHandlerPool handlerPool)
+        public Engine(IHandlerPool handlerPool, IEventBinding bindedHandlers)
         {
             this.handlerPool = handlerPool;
 
-            bindedHandler = new Dictionary<Type, ICollection<Tuple<Type, bool>>>();
+            this.bindedHandler = bindedHandlers;
         }
-
-        public IEventBinding<T> BindEvent<T>() where T : IEvent
-        {
-            var conveyor = new LinkedList<Tuple<Type, bool>>();
-
-            bindedHandler.Add(typeof(T), conveyor);
-
-            return new EventBinding<T>(conveyor);
-        } 
 
         public IHandleResponse<T> Handle<T>(T @event) where T : IEvent
         {
-            var handlerType = typeof (T);
+            var eventType = typeof (T);
 
-            if (bindedHandler.ContainsKey(handlerType))
+            if (bindedHandler.IsBinded(eventType))
             {
-                var conveyor = bindedHandler[handlerType];
+                var conveyor = bindedHandler.GetHandledConveyor(eventType);
 
                 IHandleResponse<T> handleResponse = new NullHandleResponse<T>();
 

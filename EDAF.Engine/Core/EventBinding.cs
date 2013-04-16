@@ -6,31 +6,32 @@ using EDAF.Engine.Base;
 
 namespace EDAF.Engine.Core
 {
-    public class EventBinding<T> : IEventBinding<T> where T : IEvent
+    public class EventBinding : IEventBinding
     {
-        private readonly ICollection<Tuple<Type, bool>> conveyor;
+        private readonly IDictionary<Type, ICollection<Tuple<Type, bool>>> bindedHandler;
 
-        public EventBinding(ICollection<Tuple<Type, bool>> conveyor )
+        public EventBinding()
         {
-            this.conveyor = conveyor;
+            bindedHandler = new Dictionary<Type, ICollection<Tuple<Type, bool>>>();
         }
 
-        public IEventBinding<T> ToHandler<TK>() where TK : IHandle<T>
+        public IBindToHandler<T> BindEvent<T>() where T : IEvent
         {
-            bool isResponseHandler = false;
+            var conveyor = new LinkedList<Tuple<Type, bool>>();
 
-            foreach (var @interface in typeof(TK).GetInterfaces())
-            {
-                if (@interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof (IResponse<>))
-                {
-                    isResponseHandler = true;
-                    break;
-                }
-            }
+            bindedHandler.Add(typeof(T), conveyor);
 
-            conveyor.Add(new Tuple<Type, bool>(typeof(TK), isResponseHandler));
+            return new BindToHandler<T>(conveyor);
+        }
 
-            return this;
+        public ICollection<Tuple<Type, bool>> GetHandledConveyor(Type eventType)
+        {
+            return bindedHandler[eventType];
+        }
+
+        public bool IsBinded(Type eventType)
+        {
+            return bindedHandler.ContainsKey(eventType);
         }
     }
 }
