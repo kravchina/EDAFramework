@@ -2,44 +2,32 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using EDAF.Engine.Base.Infrastructure;
-using EDAF.Engine.Base.Read;
-using EDAF.Engine.Base.Write;
+using EDAF.Engine.Base;
 
 namespace EDAF.Engine.Core.Infrastructure
 {
-    public class WriteEventBinding<T> : IWriteEventBinding<T> where T : IWriteEvent
+    public class EventBinding<T> : IEventBinding<T> where T : IEvent
     {
-        private readonly ICollection<Type> _conveyor;
+        private readonly ICollection<Tuple<Type, bool>> _conveyor;
 
 
-        public WriteEventBinding(ICollection<Type> conveyor)
+        public EventBinding(ICollection<Tuple<Type, bool>> conveyor)
         {
             _conveyor = conveyor;
         }
 
-        public IWriteEventBinding<T> ToHandler<TK>() where TK : IWriteHandler<T>
+        public IEventBinding<T> Handle<TK>() where TK : IHandle<T>
         {
-            _conveyor.Add(typeof(TK));
+            _conveyor.Add(new Tuple<Type, bool>(typeof(TK), false));
 
             return this;
         }
-    }
 
-    public class ReadEventBinding<TRequest, TResponse> : IReadEventBinding<TRequest, TResponse> where TRequest : IReadEvent<TResponse>
-    {
-        private Type _handler;
-
-
-        public ReadEventBinding()
+        public IEventBinding<T> HandleAndRead<TK, TResponse>() where TK : IHandle<T>, IResponse<TResponse>
         {
-            throw new NotImplementedException();
-        }
+            _conveyor.Add(new Tuple<Type, bool>(typeof(TK), true));
 
-
-        public void ToHandler<TK>() where TK : IReadHandler<TRequest, TResponse>
-        {
-            _handler = typeof(TK);
+            return this;
         }
     }
 }
