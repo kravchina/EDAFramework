@@ -8,9 +8,9 @@ namespace EDAF.Engine.Core
 {
     public class BindToHandler<T> : IBindToHandler<T> where T : IEvent
     {
-        private readonly ICollection<Tuple<Type, bool>> conveyor;
+        private readonly ICollection<BindedHandler> conveyor;
 
-        public BindToHandler(ICollection<Tuple<Type, bool>> conveyor )
+        public BindToHandler(ICollection<BindedHandler> conveyor)
         {
             this.conveyor = conveyor;
         }
@@ -19,16 +19,24 @@ namespace EDAF.Engine.Core
         {
             bool isResponseHandler = false;
 
+            var binding = new BindedHandler
+                {
+                    HandlerType = typeof(TK)
+                };
+
             foreach (var @interface in typeof(TK).GetInterfaces())
             {
-                if (@interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof (IResponse<>))
+                if (@interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IResponse<>))
                 {
-                    isResponseHandler = true;
-                    break;
+                    binding.IsResponse = true;
+                } 
+                if (@interface == typeof(IRequireUser))
+                {
+                    binding.IsRequiredUser = true;
                 }
             }
 
-            conveyor.Add(new Tuple<Type, bool>(typeof(TK), isResponseHandler));
+            conveyor.Add(binding);
 
             return this;
         }

@@ -43,11 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Base\IExecuteResult.cs" />
-    <Compile Include="Base\IRepository.cs" />
-    <Compile Include="Controller\BaseApiController.cs" />
-    <Compile Include="Controller\BaseController.cs" />
-    <Compile Include="Extensions\ExecuteResult.cs" />
+    <Compile Include="Controller\EdafApiController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -55,6 +51,11 @@
       <Project>{6e182875-d7f3-4112-8a48-5bae00d1a918}</Project>
       <Name>EDAF.Engine</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Base\" />
+    <Folder Include="Extensions\" />
+    <Folder Include="Infrastructure\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

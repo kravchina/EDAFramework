@@ -50,7 +50,9 @@
     <Compile Include="Base\IHandle.cs" />
     <Compile Include="Base\IHandleResponse.cs" />
     <Compile Include="Base\IHandlerPool.cs" />
+    <Compile Include="Base\IRequireUser.cs" />
     <Compile Include="Base\IResponse.cs" />
+    <Compile Include="Core\BindedHandler.cs" />
     <Compile Include="Core\BindToHandler.cs" />
     <Compile Include="Core\Engine.cs" />
     <Compile Include="Core\EventBinding.cs" />
