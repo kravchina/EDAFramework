@@ -51,5 +51,10 @@ namespace EDAF.Engine.Core
 
             throw new KeyNotFoundException();
         }
+
+        public void SetUser(IPrincipal user)
+        {
+            currentUser = user;
+        }
     }
 }

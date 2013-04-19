@@ -17,8 +17,6 @@ namespace EDAF.Engine.Core
 
         public IBindToHandler<T> ToHandler<TK>() where TK : IHandle<T>
         {
-            bool isResponseHandler = false;
-
             var binding = new BindedHandler
                 {
                     HandlerType = typeof(TK)

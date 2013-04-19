@@ -58,11 +58,10 @@
     <Compile Include="Core\EventBinding.cs" />
     <Compile Include="Core\HandleResponse.cs" />
     <Compile Include="Core\NullHandleResponse.cs" />
+    <Compile Include="Infrastructure\HandleException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Infrastructure\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
