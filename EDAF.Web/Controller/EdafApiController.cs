@@ -22,13 +22,13 @@ namespace EDAF.Web.Controller
 
         public EdafApiController(IEngine engine)
         {
-            engine.SetUser(User);
-
             this.engine = engine;
         }
 
         protected IHandleResponse<T> Handle<T>(T @event) where T : IEvent
         {
+            engine.SetUser(User);
+
             try
             {
                 return engine.Handle(@event);
