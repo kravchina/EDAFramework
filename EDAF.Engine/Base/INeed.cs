@@ -6,8 +6,8 @@ using System.Text;
 
 namespace EDAF.Engine.Base
 {
-    public interface IRequireUser
+    public interface INeed<in T>
     {
-        void SetUser(IPrincipal user);
+        void Inject(T obj);
     }
 }

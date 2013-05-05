@@ -19,18 +19,23 @@ namespace EDAF.Engine.Core
         {
             var binding = new BindedHandler
                 {
-                    HandlerType = typeof(TK)
+                    HandlerType = typeof(TK),
                 };
 
             foreach (var @interface in typeof(TK).GetInterfaces())
             {
-                if (@interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IResponse<>))
+                if (@interface.IsGenericType)
                 {
-                    binding.IsResponse = true;
-                } 
-                if (@interface == typeof(IRequireUser))
-                {
-                    binding.IsRequiredUser = true;
+                    if (@interface.GetGenericTypeDefinition() == typeof (IResponse<>))
+                    {
+                        binding.IsResponse = true;
+                    }
+                    else if (@interface.GetGenericTypeDefinition() == typeof (INeed<>))
+                    {
+                        var needType = @interface.GetGenericArguments().First();
+
+                        binding.AddNeedType(needType);
+                    }
                 }
             }
 

@@ -27,8 +27,6 @@ namespace EDAF.Web.Controller
 
         protected IHandleResponse<T> Handle<T>(T @event) where T : IEvent
         {
-            engine.SetUser(User);
-
             try
             {
                 return engine.Handle(@event);
