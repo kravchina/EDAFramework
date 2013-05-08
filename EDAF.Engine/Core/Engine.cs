@@ -9,120 +9,122 @@ namespace EDAF.Engine.Core
 {
     public class Engine : IEngine
     {
-        private readonly IEventBinding bindedHandlers;
+        private readonly IEventBinding eventBinding;
 
         private readonly IHandlerPool handlerPool;
 
         private IPrincipal currentUser;
 
-        public Engine(IHandlerPool handlerPool, IEventBinding bindedHandlers)
+        public Engine(IHandlerPool handlerPool, IEventBinding eventBinding)
         {
             this.handlerPool = handlerPool;
 
-            this.bindedHandlers = bindedHandlers;
+            this.eventBinding = eventBinding;
         }
 
         public IHandleResponse<T> Handle<T>(T @event) where T : IEvent
         {
-            var eventType = typeof(T);
+            var conveyor = GetConveyor(typeof(T));
 
-            if (bindedHandlers.IsBinded(eventType))
+            IHandleResponse<T> handleResponse = new NullHandleResponse<T>();
+
+            foreach (var bindedHandler in conveyor)
             {
-                var conveyor = bindedHandlers.GetHandledConveyor(eventType);
+                var handler = handlerPool.GetHandler<T>(bindedHandler.HandlerType);
+                
+                handler.Handle(@event);
 
-                IHandleResponse<T> handleResponse = new NullHandleResponse<T>();
-
-                foreach (var bindedHandler in conveyor)
-                {
-                    var handler = handlerPool.GetHandler<T>(bindedHandler.HandlerType);
-                    
-                    handler.Handle(@event);
-
-                    if (bindedHandler.IsResponse)
-                        handleResponse = new HandleResponse<T>(handler);
-                }
-
-                return handleResponse;
+                if (bindedHandler.IsResponse)
+                    handleResponse = new HandleResponse<T>(handler);
             }
 
-            throw new KeyNotFoundException();
+            return handleResponse;
         }
+
+        
 
         public IHandleResponse<T> Handle<T, T1>(T @event, T1 arg1) where T : IEvent
         {
-            var eventType = typeof(T);
+            var conveyor = GetConveyor(typeof(T));
 
-            if (bindedHandlers.IsBinded(eventType))
+            IHandleResponse<T> handleResponse = new NullHandleResponse<T>();
+
+            foreach (var bindedHandler in conveyor)
             {
-                var conveyor = bindedHandlers.GetHandledConveyor(eventType);
+                var handler = handlerPool.GetHandler<T>(bindedHandler.HandlerType);
 
-                IHandleResponse<T> handleResponse = new NullHandleResponse<T>();
+                Inject(arg1, handler, bindedHandler);
 
-                foreach (var bindedHandler in conveyor)
-                {
-                    var handler = handlerPool.GetHandler<T>(bindedHandler.HandlerType);
+                handler.Handle(@event);
 
-                    if (bindedHandler.IsNeedType(typeof (T1)))
-                    {
-                        ((INeed<T1>)handler).Inject(arg1);
-                    }
+                if (bindedHandler.IsResponse)
+                    handleResponse = new HandleResponse<T>(handler);
+            }
 
-                    handler.Handle(@event);
+            return handleResponse;
+        }
 
-                    if (bindedHandler.IsResponse)
-                        handleResponse = new HandleResponse<T>(handler);
-                }
+        private void Inject<T, T1>(T1 arg1, IHandle<T> handler, BindedHandler bindedHandler) where T : IEvent
+        {
+            if (bindedHandler.IsNeedType(typeof (T1)))
+            {
+                ((INeed<T1>) handler).Inject(arg1);
+            }
+        }
 
-                return handleResponse;
+        private ICollection<BindedHandler> GetConveyor(Type eventType)
+        {
+            if (eventBinding.IsBinded(eventType))
+            {
+                return eventBinding.GetHandledConveyor(eventType);
             }
 
             throw new KeyNotFoundException();
-        }
+        } 
 
         public IHandleResponse<T> Handle<T, T1, T2>(T @event, T1 arg1, T2 arg2) where T : IEvent
         {
-            var eventType = typeof(T);
+            var conveyor = GetConveyor(typeof(T));
 
-            if (bindedHandlers.IsBinded(eventType))
+            IHandleResponse<T> handleResponse = new NullHandleResponse<T>();
+
+            foreach (var bindedHandler in conveyor)
             {
-                var conveyor = bindedHandlers.GetHandledConveyor(eventType);
+                var handler = handlerPool.GetHandler<T>(bindedHandler.HandlerType);
 
-                IHandleResponse<T> handleResponse = new NullHandleResponse<T>();
+                Inject(arg1, handler, bindedHandler);
+                Inject(arg2, handler, bindedHandler);
 
-                foreach (var bindedHandler in conveyor)
-                {
-                    var handler = handlerPool.GetHandler<T>(bindedHandler.HandlerType);
+                handler.Handle(@event);
 
-                    if (bindedHandler.IsNeedType(typeof(T1)))
-                    {
-                        ((INeed<T1>)handler).Inject(arg1);
-                    }
-
-                    if (bindedHandler.IsNeedType(typeof(T2)))
-                    {
-                        ((INeed<T2>)handler).Inject(arg2);
-                    }
-
-                    handler.Handle(@event);
-
-                    if (bindedHandler.IsResponse)
-                        handleResponse = new HandleResponse<T>(handler);
-                }
-
-                return handleResponse;
+                if (bindedHandler.IsResponse)
+                    handleResponse = new HandleResponse<T>(handler);
             }
 
-            throw new KeyNotFoundException();
+            return handleResponse;
         }
 
         public IHandleResponse<T> Handle<T, T1, T2, T3>(T @event, T1 arg1, T2 arg2, T3 arg3) where T : IEvent
         {
-            throw new NotImplementedException();
-        }
+            var conveyor = GetConveyor(typeof(T));
 
-        public void SetUser(IPrincipal user)
-        {
-            currentUser = user;
+            IHandleResponse<T> handleResponse = new NullHandleResponse<T>();
+
+            foreach (var bindedHandler in conveyor)
+            {
+                var handler = handlerPool.GetHandler<T>(bindedHandler.HandlerType);
+
+                Inject(arg1, handler, bindedHandler);
+                Inject(arg2, handler, bindedHandler);
+                Inject(arg3, handler, bindedHandler);
+
+                handler.Handle(@event);
+
+                if (bindedHandler.IsResponse)
+                    handleResponse = new HandleResponse<T>(handler);
+            }
+
+            return handleResponse;
         }
     }
 }
