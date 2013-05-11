@@ -13,8 +13,6 @@ namespace EDAF.Engine.Core
 
         private readonly IHandlerPool handlerPool;
 
-        private IPrincipal currentUser;
-
         public Engine(IHandlerPool handlerPool, IEventBinding eventBinding)
         {
             this.handlerPool = handlerPool;
@@ -22,28 +20,7 @@ namespace EDAF.Engine.Core
             this.eventBinding = eventBinding;
         }
 
-        public IHandleResponse<T> Handle<T>(T @event) where T : IEvent
-        {
-            var conveyor = GetConveyor(typeof(T));
-
-            IHandleResponse<T> handleResponse = new NullHandleResponse<T>();
-
-            foreach (var bindedHandler in conveyor)
-            {
-                var handler = handlerPool.GetHandler<T>(bindedHandler.HandlerType);
-                
-                handler.Handle(@event);
-
-                if (bindedHandler.IsResponse)
-                    handleResponse = new HandleResponse<T>(handler);
-            }
-
-            return handleResponse;
-        }
-
-        
-
-        public IHandleResponse<T> Handle<T, T1>(T @event, T1 arg1) where T : IEvent
+        private IHandleResponse<T> HandleEvent<T>(T @event, params Action<IHandle<T>, BindedHandler>[] injections) where T : IEvent
         {
             var conveyor = GetConveyor(typeof(T));
 
@@ -53,7 +30,10 @@ namespace EDAF.Engine.Core
             {
                 var handler = handlerPool.GetHandler<T>(bindedHandler.HandlerType);
 
-                Inject(arg1, handler, bindedHandler);
+                foreach (var inject in injections)
+                {
+                    inject(handler, bindedHandler);
+                }
 
                 handler.Handle(@event);
 
@@ -66,13 +46,13 @@ namespace EDAF.Engine.Core
 
         private void Inject<T, T1>(T1 arg1, IHandle<T> handler, BindedHandler bindedHandler) where T : IEvent
         {
-            if (bindedHandler.IsNeedType(typeof (T1)))
+            if (bindedHandler.IsNeedType(typeof(T1)))
             {
-                ((INeed<T1>) handler).Inject(arg1);
+                ((INeed<T1>)handler).Inject(arg1);
             }
         }
 
-        private ICollection<BindedHandler> GetConveyor(Type eventType)
+        private IEnumerable<BindedHandler> GetConveyor(Type eventType)
         {
             if (eventBinding.IsBinded(eventType))
             {
@@ -80,51 +60,68 @@ namespace EDAF.Engine.Core
             }
 
             throw new KeyNotFoundException();
-        } 
+        }
+
+        public IHandleResponse<T> Handle<T>(T @event) where T : IEvent
+        {
+            return HandleEvent(@event);
+        }
+
+        public IHandleResponse<T> Handle<T, T1>(T @event, T1 arg1) where T : IEvent
+        {
+            return HandleEvent(
+                @event,
+                (handler, bindedHandler) => Inject(arg1, handler, bindedHandler));
+        }
 
         public IHandleResponse<T> Handle<T, T1, T2>(T @event, T1 arg1, T2 arg2) where T : IEvent
         {
-            var conveyor = GetConveyor(typeof(T));
-
-            IHandleResponse<T> handleResponse = new NullHandleResponse<T>();
-
-            foreach (var bindedHandler in conveyor)
-            {
-                var handler = handlerPool.GetHandler<T>(bindedHandler.HandlerType);
-
-                Inject(arg1, handler, bindedHandler);
-                Inject(arg2, handler, bindedHandler);
-
-                handler.Handle(@event);
-
-                if (bindedHandler.IsResponse)
-                    handleResponse = new HandleResponse<T>(handler);
-            }
-
-            return handleResponse;
+            return HandleEvent(
+                @event,
+                (handler, bindedHandler) => Inject(arg1, handler, bindedHandler),
+                (handler, bindedHandler) => Inject(arg2, handler, bindedHandler));
         }
 
         public IHandleResponse<T> Handle<T, T1, T2, T3>(T @event, T1 arg1, T2 arg2, T3 arg3) where T : IEvent
         {
-            var conveyor = GetConveyor(typeof(T));
+            return HandleEvent(
+                @event,
+                (handler, bindedHandler) => Inject(arg1, handler, bindedHandler),
+                (handler, bindedHandler) => Inject(arg2, handler, bindedHandler),
+                (handler, bindedHandler) => Inject(arg3, handler, bindedHandler));
+        }
 
-            IHandleResponse<T> handleResponse = new NullHandleResponse<T>();
+        public IHandleResponse<T> Handle<T, T1, T2, T3, T4>(T @event, T1 arg1, T2 arg2, T3 arg3, T4 arg4) where T : IEvent
+        {
+            return HandleEvent(
+               @event,
+               (handler, bindedHandler) => Inject(arg1, handler, bindedHandler),
+               (handler, bindedHandler) => Inject(arg2, handler, bindedHandler),
+               (handler, bindedHandler) => Inject(arg3, handler, bindedHandler),
+               (handler, bindedHandler) => Inject(arg4, handler, bindedHandler));
+        }
 
-            foreach (var bindedHandler in conveyor)
-            {
-                var handler = handlerPool.GetHandler<T>(bindedHandler.HandlerType);
+        public IHandleResponse<T> Handle<T, T1, T2, T3, T4, T5>(T @event, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) where T : IEvent
+        {
+            return HandleEvent(
+               @event,
+               (handler, bindedHandler) => Inject(arg1, handler, bindedHandler),
+               (handler, bindedHandler) => Inject(arg2, handler, bindedHandler),
+               (handler, bindedHandler) => Inject(arg3, handler, bindedHandler),
+               (handler, bindedHandler) => Inject(arg4, handler, bindedHandler),
+               (handler, bindedHandler) => Inject(arg5, handler, bindedHandler));
+        }
 
-                Inject(arg1, handler, bindedHandler);
-                Inject(arg2, handler, bindedHandler);
-                Inject(arg3, handler, bindedHandler);
-
-                handler.Handle(@event);
-
-                if (bindedHandler.IsResponse)
-                    handleResponse = new HandleResponse<T>(handler);
-            }
-
-            return handleResponse;
+        public IHandleResponse<T> Handle<T, T1, T2, T3, T4, T5, T6>(T @event, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6) where T : IEvent
+        {
+            return HandleEvent(
+               @event,
+               (handler, bindedHandler) => Inject(arg1, handler, bindedHandler),
+               (handler, bindedHandler) => Inject(arg2, handler, bindedHandler),
+               (handler, bindedHandler) => Inject(arg3, handler, bindedHandler),
+               (handler, bindedHandler) => Inject(arg4, handler, bindedHandler),
+               (handler, bindedHandler) => Inject(arg5, handler, bindedHandler),
+               (handler, bindedHandler) => Inject(arg6, handler, bindedHandler));
         }
     }
 }
