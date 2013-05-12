@@ -7,7 +7,6 @@ using System.Text;
 using System.Web;
 using System.Web.Http;
 using EDAF.Engine.Base;
-using EDAF.Engine.Infrastructure;
 
 namespace EDAF.Web.Controller
 {
@@ -23,22 +22,6 @@ namespace EDAF.Web.Controller
         public EdafApiController(IEngine engine)
         {
             this.engine = engine;
-        }
-
-        protected IHandleResponse<T> Handle<T>(T @event) where T : IEvent
-        {
-            try
-            {
-                return engine.Handle(@event);
-            }
-            catch (HandleException exception)
-            {
-                throw new HttpException(exception.GetHttpStatus(), exception.Message);
-            }
-            catch (Exception exception)
-            {
-                throw new HttpException((int)HttpStatusCode.InternalServerError, exception.Message);
-            }
         }
     }
 }
