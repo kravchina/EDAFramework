@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\IBindToHandler.cs" />
+    <Compile Include="Base\ICommit.cs" />
     <Compile Include="Base\IEngine.cs" />
     <Compile Include="Base\IEvent.cs" />
     <Compile Include="Base\IEventBinding.cs" />
@@ -52,7 +53,8 @@
     <Compile Include="Base\IHandlerPool.cs" />
     <Compile Include="Base\INeed.cs" />
     <Compile Include="Base\IResponse.cs" />
-    <Compile Include="Core\BindedHandler.cs" />
+    <Compile Include="Base\IRollback.cs" />
+    <Compile Include="Core\Binding.cs" />
     <Compile Include="Core\BindToHandler.cs" />
     <Compile Include="Core\Engine.cs" />
     <Compile Include="Core\EventBinding.cs" />

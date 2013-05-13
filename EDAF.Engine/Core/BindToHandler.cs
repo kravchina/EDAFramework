@@ -8,16 +8,16 @@ namespace EDAF.Engine.Core
 {
     public class BindToHandler<T> : IBindToHandler<T> where T : IEvent
     {
-        private readonly ICollection<BindedHandler> conveyor;
+        private readonly ICollection<Binding> conveyor;
 
-        public BindToHandler(ICollection<BindedHandler> conveyor)
+        public BindToHandler(ICollection<Binding> conveyor)
         {
             this.conveyor = conveyor;
         }
 
         public IBindToHandler<T> ToHandler<TK>() where TK : IHandle<T>
         {
-            var binding = new BindedHandler
+            var binding = new Binding
                 {
                     HandlerType = typeof(TK),
                 };
@@ -36,7 +36,19 @@ namespace EDAF.Engine.Core
 
                         binding.AddNeedType(needType);
                     }
-                }
+                } 
+                else
+                {
+                    if (@interface == typeof(ICommit))
+                    {
+                        binding.IsCommit = true;
+                    }
+                    if(@interface == typeof(IRollback))
+                    {
+                        binding.IsRollback = true;
+                    }
+                } 
+
             }
 
             conveyor.Add(binding);
