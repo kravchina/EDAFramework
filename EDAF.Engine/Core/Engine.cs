@@ -39,11 +39,13 @@ namespace EDAF.Engine.Core
 
             var conveyor = GetConveyor(bindings, injects);
 
-            IHandleResponse<T> handleResponse = new NullHandleResponse<T>();
+            IEnumerable<IHandleResponse<T>> handleResponse;
 
             try
             {
                 handleResponse = StartHandle(@event, conveyor);
+
+                CommitHandle(conveyor);
             }
             catch (Exception ex)
             {
@@ -52,48 +54,41 @@ namespace EDAF.Engine.Core
                 throw ex;
             }
 
-            CommitHandle(conveyor);
-
-            return handleResponse;
+            return handleResponse.FirstOrDefault() ?? new NullHandleResponse<T>();
         }
 
-        
-
-       private IHandleResponse<T> StartHandle<T>(T @event, IEnumerable<EventBindingTuple<Binding, IHandle<T>>> conveyor) where T : IEvent
+        private IEnumerable<HandleResponse<T>> StartHandle<T>(T @event, IEnumerable<EventBindingTuple<Binding, IHandle<T>>> conveyor) where T : IEvent
         {
-            IHandleResponse<T> handleResponse = new NullHandleResponse<T>();
-
             foreach (var binding in conveyor)
             {
                 binding.Handler.Handle(@event);
 
                 if (binding.Binding.IsResponse)
-                    handleResponse = new HandleResponse<T>(binding.Handler);
+                    yield return new HandleResponse<T>(binding.Handler);
             }
-            return handleResponse;
         }
 
-       private void CommitHandle<T>(IEnumerable<EventBindingTuple<Binding, IHandle<T>>> conveyor) where T : IEvent
-       {
-           foreach (var binding in conveyor)
-           {
-               if(binding.Binding.IsCommit)
-               {
-                   ((ICommit)binding.Handler).Commit();
-               }
-           }
-       }
+        private void CommitHandle<T>(IEnumerable<EventBindingTuple<Binding, IHandle<T>>> conveyor) where T : IEvent
+        {
+            foreach (var binding in conveyor)
+            {
+                if (binding.Binding.IsCommit)
+                {
+                    ((ICommit)binding.Handler).Commit();
+                }
+            }
+        }
 
-       private void RollbackHandle<T>(IEnumerable<EventBindingTuple<Binding, IHandle<T>>> conveyor) where T : IEvent
-       {
-           foreach (var binding in conveyor)
-           {
-               if (binding.Binding.IsRollback)
-               {
-                   ((IRollback)binding.Handler).Rollback();
-               }
-           }
-       }
+        private void RollbackHandle<T>(IEnumerable<EventBindingTuple<Binding, IHandle<T>>> conveyor) where T : IEvent
+        {
+            foreach (var binding in conveyor)
+            {
+                if (binding.Binding.IsRollback)
+                {
+                    ((IRollback)binding.Handler).Rollback();
+                }
+            }
+        }
 
         private void Inject<T, TK>(TK arg, IHandle<T> handler, Binding binding) where T : IEvent
         {
