@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Security.Principal;
 using System.Text;
@@ -7,28 +8,15 @@ using EDAF.Engine.Base;
 
 namespace EDAF.Engine.Core
 {
-    public class EventBindingTuple<TBinding, THandler>
-    {
-        public TBinding Binding { get; set; }
-
-        public THandler Handler { get; set; }
-
-        public EventBindingTuple(TBinding binding, THandler handler)
-        {
-            Binding = binding;
-            Handler = handler;
-        }
-    }
-
     public class Engine : IEngine
     {
         private readonly IEventBinding eventBinding;
 
-        private readonly IHandlerPool handlerPool;
+        private readonly IHandlerServiceLocator handlerServiceLocator;
 
-        public Engine(IHandlerPool handlerPool, IEventBinding eventBinding)
+        public Engine(IHandlerServiceLocator handlerServiceLocator, IEventBinding eventBinding)
         {
-            this.handlerPool = handlerPool;
+            this.handlerServiceLocator = handlerServiceLocator;
 
             this.eventBinding = eventBinding;
         }
@@ -37,9 +25,9 @@ namespace EDAF.Engine.Core
         {
             var bindings = GetBindings(typeof(T));
 
-            var conveyor = GetConveyor(bindings, injects);
+            var conveyor = GetConveyor(bindings, injects).ToList();
 
-            IEnumerable<IHandleResponse<T>> handleResponse;
+            IEnumerable<IHandleResponse<T>> handleResponse = new BindingList<IHandleResponse<T>>();
 
             try
             {
@@ -57,29 +45,29 @@ namespace EDAF.Engine.Core
             return handleResponse.FirstOrDefault() ?? new NullHandleResponse<T>();
         }
 
-        private IEnumerable<HandleResponse<T>> StartHandle<T>(T @event, IEnumerable<EventBindingTuple<Binding, IHandle<T>>> conveyor) where T : IEvent
+        private IEnumerable<HandleResponse<T>> StartHandle<T>(T @event, IEnumerable<ConveyorItem<Binding, IHandle<T>>> conveyor) where T : IEvent
         {
-            foreach (var binding in conveyor)
+            foreach (var item in conveyor)
             {
-                binding.Handler.Handle(@event);
+                item.Handler.Handle(@event);
 
-                if (binding.Binding.IsResponse)
-                    yield return new HandleResponse<T>(binding.Handler);
+                if (item.Binding.IsResponse)
+                    yield return new HandleResponse<T>(item.Handler);
             }
         }
 
-        private void CommitHandle<T>(IEnumerable<EventBindingTuple<Binding, IHandle<T>>> conveyor) where T : IEvent
+        private void CommitHandle<T>(IEnumerable<ConveyorItem<Binding, IHandle<T>>> conveyor) where T : IEvent
         {
-            foreach (var binding in conveyor)
+            foreach (var item in conveyor)
             {
-                if (binding.Binding.IsCommit)
+                if (item.Binding.IsCommit)
                 {
-                    ((ICommit)binding.Handler).Commit();
+                    ((ICommit)item.Handler).Commit();
                 }
             }
         }
 
-        private void RollbackHandle<T>(IEnumerable<EventBindingTuple<Binding, IHandle<T>>> conveyor) where T : IEvent
+        private void RollbackHandle<T>(IEnumerable<ConveyorItem<Binding, IHandle<T>>> conveyor) where T : IEvent
         {
             foreach (var binding in conveyor)
             {
@@ -108,18 +96,18 @@ namespace EDAF.Engine.Core
             throw new KeyNotFoundException();
         }
 
-        private IEnumerable<EventBindingTuple<Binding, IHandle<T>>> GetConveyor<T>(IEnumerable<Binding> bindings, Action<IHandle<T>, Binding>[] injects) where T : IEvent
+        private IEnumerable<ConveyorItem<Binding, IHandle<T>>> GetConveyor<T>(IEnumerable<Binding> bindings, Action<IHandle<T>, Binding>[] injects) where T : IEvent
         {
             foreach (var binding in bindings)
             {
-                var handler = handlerPool.GetHandler<T>(binding.HandlerType);
+                var handler = handlerServiceLocator.GetHandler<T>(binding.HandlerType);
 
                 foreach (var inject in injects)
                 {
                     inject(handler, binding);
                 }
 
-                yield return new EventBindingTuple<Binding, IHandle<T>>(binding, handler);
+                yield return new ConveyorItem<Binding, IHandle<T>>(binding, handler);
             }
         }
 

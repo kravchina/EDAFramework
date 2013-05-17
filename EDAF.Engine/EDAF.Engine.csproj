@@ -50,12 +50,13 @@
     <Compile Include="Base\IEventBinding.cs" />
     <Compile Include="Base\IHandle.cs" />
     <Compile Include="Base\IHandleResponse.cs" />
-    <Compile Include="Base\IHandlerPool.cs" />
+    <Compile Include="Base\IHandlerServiceLocator.cs" />
     <Compile Include="Base\INeed.cs" />
     <Compile Include="Base\IResponse.cs" />
     <Compile Include="Base\IRollback.cs" />
     <Compile Include="Core\Binding.cs" />
     <Compile Include="Core\BindToHandler.cs" />
+    <Compile Include="Core\ConveyorItem.cs" />
     <Compile Include="Core\Engine.cs" />
     <Compile Include="Core\EventBinding.cs" />
     <Compile Include="Core\HandleResponse.cs" />

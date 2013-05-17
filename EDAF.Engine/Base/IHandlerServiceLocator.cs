@@ -5,7 +5,7 @@ using System.Text;
 
 namespace EDAF.Engine.Base
 {
-    public interface IHandlerPool
+    public interface IHandlerServiceLocator
     {
         IHandle<T> GetHandler<T>(Type handler) where T : IEvent;
     }
