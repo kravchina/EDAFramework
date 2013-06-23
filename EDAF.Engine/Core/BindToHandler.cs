@@ -36,6 +36,10 @@ namespace EDAF.Engine.Core
 
                         binding.AddNeedType(needType);
                     }
+                    else if(@interface.GetGenericTypeDefinition() == typeof (INeedPreviousResponse<,>))
+                    {
+                        binding.IsNeedPreviousResponse = true;
+                    }
                 } 
                 else
                 {

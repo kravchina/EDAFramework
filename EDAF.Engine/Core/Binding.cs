@@ -22,6 +22,8 @@ namespace EDAF.Engine.Core
 
         public bool IsRollback { get; set; }
 
+        public bool IsNeedPreviousResponse { get; set; }
+
         public void AddNeedType(Type type)
         {
             NeedsType.Add(type);
