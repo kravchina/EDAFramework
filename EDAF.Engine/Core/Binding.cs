@@ -24,6 +24,8 @@ namespace EDAF.Engine.Core
 
         public bool IsNeedPreviousResponse { get; set; }
 
+        public Type NeedPreviousResponseType { get; set; }
+        
         public void AddNeedType(Type type)
         {
             NeedsType.Add(type);

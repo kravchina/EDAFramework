@@ -27,39 +27,44 @@ namespace EDAF.Engine.Core
 
             var conveyor = GetConveyor(bindings, injects).ToList();
 
-            IHandleResponse<T> handleResponse;
+            IHandleResponse<T> response;
 
             try
             {
-                handleResponse = StartHandle(@event, conveyor);
+                response = StartHandle(@event, conveyor);
 
                 CommitHandle(conveyor);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 RollbackHandle(conveyor);
 
-                throw ex;
+                throw;
             }
-
-            return handleResponse;
+            return response;
         }
 
         private IHandleResponse<T> StartHandle<T>(T @event, IEnumerable<ConveyorItem<Binding, IHandle<T>>> conveyor) where T : IEvent
         {
             IHandleResponse<T> handleResponse = new NullHandleResponse<T>();
-
+            
             foreach (var item in conveyor)
             {
+                var handler = item.Handler;
+
                 if (item.Binding.IsNeedPreviousResponse)
                 {
-                    ((INeedPreviousResponse<IHandleResponse<T>,T>)item.Handler).InjectResponse(handleResponse);
+                    var response = handleResponse.GetResponse<object>();
+
+                    var method = handler.GetType().GetMethod("InjectResponse");
+
+                    method.Invoke(handler, new[] { response });
                 }
 
-                item.Handler.Handle(@event);
+                handler.Handle(@event);
 
                 if (item.Binding.IsResponse)
-                   handleResponse = new HandleResponse<T>(item.Handler);
+                    handleResponse = new HandleResponse<T>(item.Handler);
             }
 
             return handleResponse;

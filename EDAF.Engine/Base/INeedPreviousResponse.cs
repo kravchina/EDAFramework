@@ -5,8 +5,8 @@ using System.Text;
 
 namespace EDAF.Engine.Base
 {
-    public interface INeedPreviousResponse<T, K> where T : IHandleResponse<K> where K : IEvent 
+    public interface INeedPreviousResponse<in T>
     {
-        void InjectResponse(IHandleResponse<K> response);
+        void InjectResponse(T response);
     }
 }
