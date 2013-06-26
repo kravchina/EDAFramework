@@ -9,7 +9,7 @@ namespace EDAF.Engine.Base
     public interface IEventBinding
     {
         IBindToHandler<T> BindEvent<T>() where T : IEvent;
-        ICollection<Binding> GetHandledConveyor(Type eventType);
+        ICollection<HandlerUnit> GetHandledConveyor(Type eventType);
         bool IsBinded(Type eventType);
     }
 }

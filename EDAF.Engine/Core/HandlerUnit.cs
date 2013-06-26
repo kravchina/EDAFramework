@@ -5,9 +5,9 @@ using System.Text;
 
 namespace EDAF.Engine.Core
 {
-    public class Binding
+    public class HandlerUnit
     {
-        public Binding()
+        public HandlerUnit()
         {
         }
 

@@ -8,14 +8,46 @@ using EDAF.Engine.Base;
 
 namespace EDAF.Engine.Core
 {
+    public interface ITestHandler
+    {
+        
+    }
+
+    public interface IResp<T>
+    {
+        
+    }
+
+    public class TestHandler : ITestHandler, IResp<int>
+    {
+        
+    }
+
+    public class HandlingConfig<T> where T : ITestHandler
+    {
+    }
+
+    public static class HandlingConfigExt 
+    {
+        public static void GetResponse<K,T>(this HandlingConfig<T> t) where T : ITestHandler, IResp<K>
+        {
+            
+        }
+    }
+
     public class Engine : IEngine
     {
+
+         
+
         private readonly IEventBinding eventBinding;
 
         private readonly IHandlerServiceLocator handlerServiceLocator;
 
         public Engine(IHandlerServiceLocator handlerServiceLocator, IEventBinding eventBinding)
         {
+            new HandlingConfig<TestHandler>().GetResponse<int>();
+
             this.handlerServiceLocator = handlerServiceLocator;
 
             this.eventBinding = eventBinding;
@@ -25,7 +57,7 @@ namespace EDAF.Engine.Core
         {
             var units = GetHandlersUnits(typeof(T));
 
-            var conveyor = GetConveyor(units).ToList();
+            var conveyor = GetConveyor<T>(units).ToList();
 
             IHandleResponse<T> response;
 

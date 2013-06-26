@@ -54,7 +54,7 @@
     <Compile Include="Base\INeedPreviousResponse.cs" />
     <Compile Include="Base\IResponse.cs" />
     <Compile Include="Base\IRollback.cs" />
-    <Compile Include="Core\Binding.cs" />
+    <Compile Include="Core\HandlerUnit.cs" />
     <Compile Include="Core\BindToHandler.cs" />
     <Compile Include="Core\ConveyorItem.cs" />
     <Compile Include="Core\Engine.cs" />

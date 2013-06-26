@@ -8,23 +8,23 @@ namespace EDAF.Engine.Core
 {
     public class EventBinding : IEventBinding
     {
-        private readonly IDictionary<Type, ICollection<Binding>> bindedHandler;
+        private readonly IDictionary<Type, ICollection<HandlerUnit>> bindedHandler;
 
         public EventBinding()
         {
-            bindedHandler = new Dictionary<Type, ICollection<Binding>>();
+            bindedHandler = new Dictionary<Type, ICollection<HandlerUnit>>();
         }
 
         public IBindToHandler<T> BindEvent<T>() where T : IEvent
         {
-            var conveyor = new LinkedList<Binding>();
+            var conveyor = new LinkedList<HandlerUnit>();
 
             bindedHandler.Add(typeof(T), conveyor);
 
             return new BindToHandler<T>(conveyor);
         }
 
-        public ICollection<Binding> GetHandledConveyor(Type eventType)
+        public ICollection<HandlerUnit> GetHandledConveyor(Type eventType)
         {
             return bindedHandler[eventType];
         }

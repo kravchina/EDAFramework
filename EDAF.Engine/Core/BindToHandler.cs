@@ -8,16 +8,16 @@ namespace EDAF.Engine.Core
 {
     public class BindToHandler<T> : IBindToHandler<T> where T : IEvent
     {
-        private readonly ICollection<Binding> conveyor;
+        private readonly ICollection<HandlerUnit> conveyor;
 
-        public BindToHandler(ICollection<Binding> conveyor)
+        public BindToHandler(ICollection<HandlerUnit> conveyor)
         {
             this.conveyor = conveyor;
         }
 
         public IBindToHandler<T> ToHandler<TK>() where TK : IHandle<T>
         {
-            var binding = new Binding
+            var binding = new HandlerUnit
                 {
                     HandlerType = typeof(TK),
                 };
