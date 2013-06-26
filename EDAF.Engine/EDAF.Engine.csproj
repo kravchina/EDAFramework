@@ -51,7 +51,6 @@
     <Compile Include="Base\IHandle.cs" />
     <Compile Include="Base\IHandleResponse.cs" />
     <Compile Include="Base\IHandlerServiceLocator.cs" />
-    <Compile Include="Base\INeed.cs" />
     <Compile Include="Base\INeedPreviousResponse.cs" />
     <Compile Include="Base\IResponse.cs" />
     <Compile Include="Base\IRollback.cs" />

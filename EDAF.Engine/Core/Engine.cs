@@ -21,11 +21,11 @@ namespace EDAF.Engine.Core
             this.eventBinding = eventBinding;
         }
 
-        private IHandleResponse<T> HandleEvent<T>(T @event, params Action<IHandle<T>, Binding>[] injects) where T : IEvent
+        private IHandleResponse<T> HandleEvent<T>(T @event) where T : IEvent
         {
-            var bindings = GetBindings(typeof(T));
+            var units = GetHandlersUnits(typeof(T));
 
-            var conveyor = GetConveyor(bindings, injects).ToList();
+            var conveyor = GetConveyor(units).ToList();
 
             IHandleResponse<T> response;
 
@@ -44,7 +44,7 @@ namespace EDAF.Engine.Core
             return response;
         }
 
-        private IHandleResponse<T> StartHandle<T>(T @event, IEnumerable<ConveyorItem<Binding, IHandle<T>>> conveyor) where T : IEvent
+        private IHandleResponse<T> StartHandle<T>(T @event, IEnumerable<ConveyorItem<HandlerUnit, IHandle<T>>> conveyor) where T : IEvent
         {
             IHandleResponse<T> handleResponse = new NullHandleResponse<T>();
             
@@ -70,7 +70,7 @@ namespace EDAF.Engine.Core
             return handleResponse;
         }
 
-        private void CommitHandle<T>(IEnumerable<ConveyorItem<Binding, IHandle<T>>> conveyor) where T : IEvent
+        private void CommitHandle<T>(IEnumerable<ConveyorItem<HandlerUnit, IHandle<T>>> conveyor) where T : IEvent
         {
             foreach (var item in conveyor)
             {
@@ -81,7 +81,7 @@ namespace EDAF.Engine.Core
             }
         }
 
-        private void RollbackHandle<T>(IEnumerable<ConveyorItem<Binding, IHandle<T>>> conveyor) where T : IEvent
+        private void RollbackHandle<T>(IEnumerable<ConveyorItem<HandlerUnit, IHandle<T>>> conveyor) where T : IEvent
         {
             foreach (var binding in conveyor)
             {
@@ -92,15 +92,7 @@ namespace EDAF.Engine.Core
             }
         }
 
-        private void Inject<T, TK>(TK arg, IHandle<T> handler, Binding binding) where T : IEvent
-        {
-            if (binding.IsNeedType(typeof(TK)))
-            {
-                ((INeed<TK>)handler).Inject(arg);
-            }
-        }
-
-        private IEnumerable<Binding> GetBindings(Type eventType)
+        private IEnumerable<HandlerUnit> GetHandlersUnits(Type eventType)
         {
             if (eventBinding.IsBinded(eventType))
             {
@@ -110,81 +102,19 @@ namespace EDAF.Engine.Core
             throw new KeyNotFoundException();
         }
 
-        private IEnumerable<ConveyorItem<Binding, IHandle<T>>> GetConveyor<T>(IEnumerable<Binding> bindings, Action<IHandle<T>, Binding>[] injects) where T : IEvent
+        private IEnumerable<ConveyorItem<HandlerUnit, IHandle<T>>> GetConveyor<T>(IEnumerable<HandlerUnit> units) where T : IEvent
         {
-            foreach (var binding in bindings)
+            foreach (var binding in units)
             {
                 var handler = handlerServiceLocator.GetHandler<T>(binding.HandlerType);
-
-                foreach (var inject in injects)
-                {
-                    inject(handler, binding);
-                }
-
-                yield return new ConveyorItem<Binding, IHandle<T>>(binding, handler);
+                
+                yield return new ConveyorItem<HandlerUnit, IHandle<T>>(binding, handler);
             }
         }
 
         public IHandleResponse<T> Handle<T>(T @event) where T : IEvent
         {
             return HandleEvent(@event);
-        }
-
-        public IHandleResponse<T> Handle<T, T1>(T @event, T1 arg1) where T : IEvent
-        {
-            return HandleEvent(
-                @event,
-                (handler, binding) => Inject(arg1, handler, binding));
-        }
-
-        public IHandleResponse<T> Handle<T, T1, T2>(T @event, T1 arg1, T2 arg2) where T : IEvent
-        {
-            return HandleEvent(
-                @event,
-                (handler, binding) => Inject(arg1, handler, binding),
-                (handler, binding) => Inject(arg2, handler, binding));
-        }
-
-        public IHandleResponse<T> Handle<T, T1, T2, T3>(T @event, T1 arg1, T2 arg2, T3 arg3) where T : IEvent
-        {
-            return HandleEvent(
-                @event,
-                (handler, binding) => Inject(arg1, handler, binding),
-                (handler, binding) => Inject(arg2, handler, binding),
-                (handler, binding) => Inject(arg3, handler, binding));
-        }
-
-        public IHandleResponse<T> Handle<T, T1, T2, T3, T4>(T @event, T1 arg1, T2 arg2, T3 arg3, T4 arg4) where T : IEvent
-        {
-            return HandleEvent(
-               @event,
-               (handler, binding) => Inject(arg1, handler, binding),
-               (handler, binding) => Inject(arg2, handler, binding),
-               (handler, binding) => Inject(arg3, handler, binding),
-               (handler, binding) => Inject(arg4, handler, binding));
-        }
-
-        public IHandleResponse<T> Handle<T, T1, T2, T3, T4, T5>(T @event, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) where T : IEvent
-        {
-            return HandleEvent(
-               @event,
-               (handler, binding) => Inject(arg1, handler, binding),
-               (handler, binding) => Inject(arg2, handler, binding),
-               (handler, binding) => Inject(arg3, handler, binding),
-               (handler, binding) => Inject(arg4, handler, binding),
-               (handler, binding) => Inject(arg5, handler, binding));
-        }
-
-        public IHandleResponse<T> Handle<T, T1, T2, T3, T4, T5, T6>(T @event, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6) where T : IEvent
-        {
-            return HandleEvent(
-               @event,
-               (handler, binding) => Inject(arg1, handler, binding),
-               (handler, binding) => Inject(arg2, handler, binding),
-               (handler, binding) => Inject(arg3, handler, binding),
-               (handler, binding) => Inject(arg4, handler, binding),
-               (handler, binding) => Inject(arg5, handler, binding),
-               (handler, binding) => Inject(arg6, handler, binding));
         }
     }
 }

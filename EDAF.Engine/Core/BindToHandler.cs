@@ -30,12 +30,6 @@ namespace EDAF.Engine.Core
                     {
                         binding.IsResponse = true;
                     }
-                    else if (@interface.GetGenericTypeDefinition() == typeof (INeed<>))
-                    {
-                        var needType = @interface.GetGenericArguments().First();
-
-                        binding.AddNeedType(needType);
-                    }
                     else if (@interface.GetGenericTypeDefinition() == typeof(INeedPreviousResponse<>))
                     {
                         binding.IsNeedPreviousResponse = true;
